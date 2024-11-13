@@ -17,6 +17,8 @@ In this assignment, you will be running the jupyter notebook `SQC_IonQ_Challenge
 
 You *will* need to edit `ansatz_library_custom.py`. In this file, there are sections marked out by comments for you to edit. 
 
+Note that one of your constraints for this assignment is the amount of memory provided by qBraid. If your ansatz/encoder require more memory than qBraid allows, qBraid will crash and you will have to reload the page. If qBraid crashes or causes problems for another reason, please include that in your report.  
+
 Objective 1: Run the model using the default ansatz and encoder (no change). Analyze the performance. 
 
 Objective 2: Edit the class CustomEncoder in `ansatz_library_custom.py`. Try to achieve a higher classification accuracy with your new encoder. You can visualize your encoder by rerunning the cell in `SCQ_IonQ_Challenge.ipynb` that draws your encoder circuit. Explain what you changed, how the accuracy changed, and why you think the model behaved differently.
