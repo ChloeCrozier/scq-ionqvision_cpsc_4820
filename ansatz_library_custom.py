@@ -67,15 +67,19 @@ class CustomEncoder(VariationalAnsatz):
         x = ParameterVector(param_prefix, num_qubits)
     #End of section
     #You can change this section: 
-        entanglement_depth = 1
-        [self.ry(np.pi * xi, qbt) for qbt, xi in enumerate(x)] 
-
-        for k in range(entanglement_depth):
-            top_qubit = 0
-            while top_qubit < num_qubits - (k + 1):
-                self.cx(top_qubit, top_qubit + k + 1)
-                top_qubit += 1
+        entanglement_depth = 3
+        for layer in range(entanglement_depth):
+            [self.rx(np.pi * xi / (layer + 1), qbt) for qbt, xi in enumerate(x)]
+            [self.ry(np.pi / 2 * xi, qbt) for qbt, xi in enumerate(x)]
+            
+            for i in range(num_qubits):
+                for j in range(i + 1, num_qubits):
+                    self.rxx(np.pi / 4, i, j)
     #End of Section
+                                
+                            
+                
+                        
 
 
 class BrickworkLayoutAnsatz(VariationalAnsatz):
@@ -380,7 +384,8 @@ class CustomAnsatz(VariationalAnsatz):
         def two_qubit_block(self, theta, q1, q2):
     #You can edit this section
             pool_op = QuantumCircuit(2, name="POOL")
-            pool_op.crz(theta[0], 1, 0)
+            pool_op.rz(theta[0], 1)  # Depth-dependent rotation
+            pool_op.crx(theta[0], 1, 0)  # Controlled RX gate
     #End of section
             self.append(pool_op.to_instruction(), [q1, q2])
 
@@ -395,7 +400,6 @@ class CustomAnsatz(VariationalAnsatz):
     #You can edit this section
         for k in range(num_layers):
             qubits = list(range(0, num_qubits, 2**k))
-        
             conv = CustomAnsatz.ConvolutionBrickwork(num_qubits, filter_depth, prefix="C" + str(k), qubits=qubits)
             self.compose(conv, inplace=True)
             
